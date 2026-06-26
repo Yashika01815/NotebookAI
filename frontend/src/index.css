@@ -1,0 +1,169 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-white/10;
+  }
+  
+  body {
+    @apply bg-surface-950 text-slate-100 font-sans;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-white/10 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-white/20;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/5 backdrop-blur-sm border border-white/10;
+  }
+
+  .glass-dark {
+    @apply bg-black/20 backdrop-blur-sm border border-white/5;
+  }
+
+  .btn-primary {
+    @apply bg-brand-600 hover:bg-brand-500 text-white font-medium px-4 py-2 rounded-lg 
+           transition-all duration-200 flex items-center gap-2 disabled:opacity-50 
+           disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-brand-500/50;
+  }
+
+  .btn-ghost {
+    @apply text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 rounded-lg 
+           transition-all duration-200 flex items-center gap-2 font-medium;
+  }
+
+  .btn-danger {
+    @apply bg-red-500/10 hover:bg-red-500/20 text-red-400 px-4 py-2 rounded-lg 
+           transition-all duration-200 flex items-center gap-2 font-medium;
+  }
+
+  .input {
+    @apply bg-white/5 border border-white/10 text-white placeholder-slate-500 
+           rounded-lg px-4 py-2.5 w-full focus:outline-none focus:ring-2 
+           focus:ring-brand-500/50 focus:border-brand-500/50 transition-all;
+  }
+
+  .card {
+    @apply bg-surface-900 border border-white/5 rounded-xl;
+  }
+
+  .sidebar-item {
+    @apply flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white
+           hover:bg-white/5 transition-all duration-150 cursor-pointer text-sm font-medium;
+  }
+
+  .sidebar-item-active {
+    @apply bg-brand-600/20 text-brand-400 border border-brand-500/20;
+  }
+
+  .chat-bubble-user {
+    @apply bg-brand-600/20 border border-brand-500/20 text-slate-100 rounded-2xl 
+           rounded-tr-sm px-4 py-3 max-w-[80%] ml-auto;
+  }
+
+  .chat-bubble-ai {
+    @apply bg-surface-800 border border-white/5 text-slate-100 rounded-2xl 
+           rounded-tl-sm px-4 py-3 max-w-[85%];
+  }
+
+  .tab {
+    @apply px-4 py-2 text-sm font-medium text-slate-400 hover:text-white border-b-2
+           border-transparent hover:border-white/20 transition-all duration-150 whitespace-nowrap;
+  }
+
+  .tab-active {
+    @apply text-brand-400 border-brand-500;
+  }
+
+  .badge {
+    @apply text-xs px-2 py-0.5 rounded-full font-medium;
+  }
+
+  .badge-green {
+    @apply bg-emerald-500/10 text-emerald-400 border border-emerald-500/20;
+  }
+
+  .badge-yellow {
+    @apply bg-amber-500/10 text-amber-400 border border-amber-500/20;
+  }
+
+  .badge-red {
+    @apply bg-red-500/10 text-red-400 border border-red-500/20;
+  }
+
+  .badge-purple {
+    @apply bg-brand-500/10 text-brand-400 border border-brand-500/20;
+  }
+}
+
+/* ReactFlow customization */
+.react-flow__node {
+  @apply !text-slate-100;
+}
+
+.react-flow__edge-path {
+  stroke: rgb(99 102 241 / 0.5);
+}
+
+.react-flow__controls {
+  @apply !bg-surface-900 !border-white/10;
+}
+
+.react-flow__controls-button {
+  @apply !bg-surface-800 !border-white/10 !text-slate-400 hover:!bg-white/5;
+}
+
+.react-flow__minimap {
+  @apply !bg-surface-900 !border-white/10;
+}
+
+/* Markdown prose styles */
+.prose-custom {
+  @apply prose prose-invert prose-sm max-w-none
+         prose-headings:text-white prose-headings:font-semibold
+         prose-p:text-slate-300 prose-p:leading-relaxed
+         prose-code:text-brand-300 prose-code:bg-white/5 prose-code:px-1.5 
+         prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:text-xs
+         prose-pre:bg-surface-800 prose-pre:border prose-pre:border-white/10
+         prose-a:text-brand-400 prose-a:no-underline hover:prose-a:underline
+         prose-strong:text-white prose-em:text-slate-300
+         prose-ul:text-slate-300 prose-ol:text-slate-300
+         prose-li:text-slate-300 prose-blockquote:border-brand-500/50
+         prose-blockquote:text-slate-400;
+}
+
+/* Loading animation */
+.dot-typing {
+  @apply flex items-center gap-1;
+}
+
+.dot-typing span {
+  @apply w-1.5 h-1.5 rounded-full bg-slate-500;
+  animation: dotBounce 1.4s ease-in-out infinite;
+}
+
+.dot-typing span:nth-child(2) { animation-delay: 0.2s; }
+.dot-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dotBounce {
+  0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+  40% { transform: scale(1); opacity: 1; }
+}
