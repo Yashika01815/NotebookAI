@@ -1,7 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
-import pdfParse from 'pdf-parse';
+
 import mammoth from 'mammoth';
+import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 
 export const parseDocument = async (filePath, fileType) => {
   const absolutePath = path.resolve(filePath);

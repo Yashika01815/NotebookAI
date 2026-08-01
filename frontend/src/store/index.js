@@ -77,7 +77,10 @@ export const useChatStore = create((set) => ({
 export const useUIStore = create((set) => ({
   rightPanelTab: 'sources',
   isMobileSidebarOpen: false,
-  
+  focusMode: false,
+
   setRightPanelTab: (tab) => set({ rightPanelTab: tab }),
   toggleMobileSidebar: () => set((s) => ({ isMobileSidebarOpen: !s.isMobileSidebarOpen })),
+  setFocusMode: (focusMode) => set({ focusMode }),
+  toggleFocusMode: () => set((s) => ({ focusMode: !s.focusMode })),
 }));

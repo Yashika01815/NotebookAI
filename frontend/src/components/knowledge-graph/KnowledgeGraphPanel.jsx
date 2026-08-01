@@ -5,6 +5,7 @@ import ReactFlow, {
   Handle, Position, MarkerType,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
+import dagre from 'dagre';
 import { SparklesIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import { aiAPI } from '../../services/api.js';
@@ -17,17 +18,23 @@ const TYPE_COLORS = {
   place:   { bg: 'bg-cyan-600/20', border: 'border-cyan-500/40', text: 'text-cyan-300', dot: '#06b6d4' },
 };
 
+// Sized to its own content (data.width) so the layout's reserved space
+// always matches what's actually rendered — this is what stops labels
+// from overlapping neighboring nodes or edges.
 const KGNode = ({ data, selected }) => {
   const colors = TYPE_COLORS[data.type] || TYPE_COLORS.concept;
   return (
-    <div className={`px-3 py-2 rounded-xl border ${colors.bg} ${colors.border} ${selected ? 'ring-2 ring-white/30' : ''} shadow-lg`}>
+    <div
+      style={{ width: data.width }}
+      className={`px-3.5 py-2.5 rounded-xl border ${colors.bg} ${colors.border} ${selected ? 'ring-2 ring-white/30' : ''} shadow-lg backdrop-blur-sm`}
+    >
       <Handle type="target" position={Position.Left} className="!bg-white/20 !border-0 !w-2 !h-2" />
-      <div className="flex items-center gap-1.5">
-        <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: colors.dot }} />
-        <span className={`text-xs font-semibold whitespace-nowrap ${colors.text}`}>{data.label}</span>
+      <div className="flex items-start gap-1.5">
+        <div className="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1" style={{ backgroundColor: colors.dot }} />
+        <span className={`text-xs font-semibold leading-snug break-words ${colors.text}`}>{data.label}</span>
       </div>
       {data.type && (
-        <p className="text-xs text-slate-500 mt-0.5 capitalize">{data.type}</p>
+        <p className="text-[10px] text-slate-500 mt-1 capitalize pl-3">{data.type}</p>
       )}
       <Handle type="source" position={Position.Right} className="!bg-white/20 !border-0 !w-2 !h-2" />
     </div>
@@ -36,20 +43,61 @@ const KGNode = ({ data, selected }) => {
 
 const nodeTypes = { kgnode: KGNode };
 
-// Layout: simple circular/force-like positioning
-const layoutNodes = (rawNodes) => {
-  const count = rawNodes.length;
-  const cx = 400, cy = 300, r = 200;
-  return rawNodes.map((n, i) => ({
-    id: n.id,
-    type: 'kgnode',
-    position: {
-      x: cx + r * Math.cos((2 * Math.PI * i) / count),
-      y: cy + r * Math.sin((2 * Math.PI * i) / count),
-    },
-    data: { label: n.label, type: n.type },
-  }));
-};
+// Estimate a comfortable box size for a label + type caption.
+function estimateNodeSize(label = '') {
+  const maxWidth = 220;
+  const minWidth = 150;
+  const charWidth = 6.6;
+  const paddingX = 44; // dot + gaps
+  const lineHeight = 16;
+  const baseHeight = 56; // label row + type caption + vertical padding
+
+  const singleLineWidth = Math.ceil(label.length * charWidth + paddingX);
+  if (singleLineWidth <= maxWidth) {
+    return { width: Math.max(minWidth, singleLineWidth), height: baseHeight };
+  }
+
+  const maxCharsPerLine = Math.max(1, Math.floor((maxWidth - paddingX) / charWidth));
+  const lines = Math.ceil(label.length / maxCharsPerLine);
+  return { width: maxWidth, height: baseHeight + (lines - 1) * lineHeight };
+}
+
+// Proper auto-layout with dagre instead of a fixed-radius circle (which
+// overlapped badly once there were more than ~8 nodes). Falls back to a
+// simple grid if the graph has no relationships to lay out against.
+function layoutGraph(rawNodes, rawEdges) {
+  const sized = rawNodes.map(n => ({ ...n, ...estimateNodeSize(n.label || '') }));
+
+  if (!rawEdges || rawEdges.length === 0) {
+    const cols = Math.max(1, Math.ceil(Math.sqrt(sized.length)));
+    const cellW = 260, cellH = 130;
+    return sized.map((n, i) => ({
+      id: n.id,
+      type: 'kgnode',
+      position: { x: (i % cols) * cellW, y: Math.floor(i / cols) * cellH },
+      data: { label: n.label, type: n.type, width: n.width },
+    }));
+  }
+
+  const g = new dagre.graphlib.Graph();
+  g.setGraph({ rankdir: 'LR', nodesep: 70, ranksep: 160, marginx: 60, marginy: 60 });
+  g.setDefaultEdgeLabel(() => ({}));
+  sized.forEach(n => g.setNode(n.id, { width: n.width, height: n.height }));
+  rawEdges.forEach(e => {
+    if (g.hasNode(e.source) && g.hasNode(e.target)) g.setEdge(e.source, e.target);
+  });
+  dagre.layout(g);
+
+  return sized.map(n => {
+    const pos = g.node(n.id) || { x: 0, y: 0 };
+    return {
+      id: n.id,
+      type: 'kgnode',
+      position: { x: pos.x - n.width / 2, y: pos.y - n.height / 2 },
+      data: { label: n.label, type: n.type, width: n.width },
+    };
+  });
+}
 
 export default function KnowledgeGraphPanel({ workspaceId }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -66,16 +114,20 @@ export default function KnowledgeGraphPanel({ workspaceId }) {
       const data = await aiAPI.getKnowledgeGraph(workspaceId);
       const { nodes: rawNodes, edges: rawEdges } = data.knowledgeGraph;
 
-      const flowNodes = layoutNodes(rawNodes);
+      const flowNodes = layoutGraph(rawNodes, rawEdges);
       const flowEdges = rawEdges.map(e => ({
         id: `e-${e.source}-${e.target}`,
         source: e.source,
         target: e.target,
         label: e.label,
-        labelStyle: { fill: '#94a3b8', fontSize: 9 },
-        labelBgStyle: { fill: '#0f172a', fillOpacity: 0.8 },
+        type: 'smoothstep',
+        pathOptions: { borderRadius: 16 },
+        labelStyle: { fill: '#cbd5e1', fontSize: 10, fontWeight: 500 },
+        labelBgStyle: { fill: '#0f172a', fillOpacity: 0.92 },
+        labelBgPadding: [6, 4],
+        labelBgBorderRadius: 6,
         style: { stroke: 'rgba(99,102,241,0.35)', strokeWidth: 1.5 },
-        markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(99,102,241,0.5)', width: 12, height: 12 },
+        markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(99,102,241,0.5)', width: 14, height: 14 },
       }));
 
       // Build legend from unique types
@@ -153,7 +205,9 @@ export default function KnowledgeGraphPanel({ workspaceId }) {
           onConnect={onConnect}
           nodeTypes={nodeTypes}
           fitView
-          fitViewOptions={{ padding: 0.15 }}
+          fitViewOptions={{ padding: 0.2 }}
+          minZoom={0.1}
+          maxZoom={2}
           className="bg-surface-950/50"
         >
           <Background color="rgba(255,255,255,0.02)" gap={24} />

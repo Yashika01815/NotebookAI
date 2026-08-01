@@ -5,6 +5,7 @@ import { BookOpenIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { useWorkspaceStore, useDocumentStore, useUIStore } from '../../store/index.js';
 import { workspaceAPI, documentAPI } from '../../services/api.js';
 import ChatInterface from '../chat/ChatInterface.jsx';
+import ChatRail from './ChatRail.jsx';
 import RightPanel from './RightPanel.jsx';
 import WorkspaceHeader from './WorkspaceHeader.jsx';
 import toast from 'react-hot-toast';
@@ -13,6 +14,7 @@ export default function WorkspacePage() {
   const { workspaceId } = useParams();
   const { workspaces, setActiveWorkspace, activeWorkspace } = useWorkspaceStore();
   const { setDocuments, setLoading } = useDocumentStore();
+  const { focusMode } = useUIStore();
 
   useEffect(() => {
     if (!workspaceId) return;
@@ -52,8 +54,16 @@ export default function WorkspacePage() {
     <div className="flex flex-col h-full">
       <WorkspaceHeader workspace={activeWorkspace} />
       <div className="flex flex-1 overflow-hidden">
-        <ChatInterface workspaceId={workspaceId} />
-        <RightPanel workspaceId={workspaceId} />
+        <motion.div
+          animate={{ width: focusMode ? 64 : '40%' }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          className={`h-full flex-shrink-0 overflow-hidden flex flex-col ${focusMode ? '' : 'min-w-[340px] max-w-[560px]'}`}
+        >
+          {focusMode ? <ChatRail /> : <ChatInterface workspaceId={workspaceId} />}
+        </motion.div>
+        <div className="flex-1 h-full min-w-0 overflow-hidden">
+          <RightPanel workspaceId={workspaceId} />
+        </div>
       </div>
     </div>
   );
