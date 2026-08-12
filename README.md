@@ -1,374 +1,1030 @@
-# 🧠 NotebookAI — Full-Stack AI Knowledge Workspace
+<div align="center">
 
-> A production-ready AI-powered knowledge workspace inspired by Google NotebookLM.  
-> Built with React + Vite, Node.js + Express, MongoDB Atlas, LangChain, Google Gemini, ChromaDB, and React Flow.
+# 🧠 NotebookAI
+
+### **Your Documents. Your Knowledge. Your AI.**
+
+A full-stack **AI-powered knowledge workspace** that transforms documents into an interactive learning and research environment using **RAG, vector search, LLMs, embeddings, and knowledge visualization**.
+
+<br/>
+
+<a href="https://github.com/yourname/notebookai">
+  <img src="https://img.shields.io/badge/💻_SOURCE_CODE-GitHub-181717?style=for-the-badge&logo=github" />
+</a>
+
+<br/><br/>
+
+![React](https://img.shields.io/badge/React-Vite-61DAFB?style=flat-square\&logo=react\&logoColor=black)
+![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=flat-square\&logo=node.js\&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=flat-square\&logo=mongodb\&logoColor=white)
+![LangChain](https://img.shields.io/badge/LangChain-RAG-1C3C3C?style=flat-square)
+![Gemini](https://img.shields.io/badge/Google-Gemini-4285F4?style=flat-square)
+![ChromaDB](https://img.shields.io/badge/ChromaDB-Vector%20Database-FF6B35?style=flat-square)
+![React Flow](https://img.shields.io/badge/React%20Flow-Visualization-FF007A?style=flat-square)
+
+</div>
 
 ---
 
-## 📁 Folder Structure
+# 📚 What is NotebookAI?
 
+Reading a large collection of documents usually means constantly switching between:
+
+**📄 Documents → 🔍 Search → 📝 Notes → 🧠 Understanding → 📊 Revision**
+
+NotebookAI brings these workflows into **one intelligent workspace**.
+
+Upload your documents, ask questions about them, generate summaries, create mind maps, build flashcards, take quizzes, and explore relationships between concepts — all from the same knowledge base.
+
+> **NotebookAI turns static documents into an interactive AI knowledge system.** 🚀
+
+---
+
+# ✨ The Experience
+
+```text
+                    📚 YOUR DOCUMENTS
+                           │
+                           ▼
+                 ┌───────────────────┐
+                 │   📄 Document     │
+                 │     Processing    │
+                 └─────────┬─────────┘
+                           │
+                           ▼
+                 ✂️ Text Chunking
+                           │
+                           ▼
+                  🧠 Embeddings
+                           │
+                           ▼
+                 🗃️ ChromaDB
+                           │
+                    Vector Search
+                           │
+             ┌─────────────┼─────────────┐
+             ▼             ▼             ▼
+          💬 Chat       📝 Summary     🧠 Mind Map
+             │             │             │
+             ▼             ▼             ▼
+        🎴 Flashcards    📝 Quiz    🕸️ Knowledge Graph
+             │             │             │
+             └─────────────┼─────────────┘
+                           ▼
+                     🤖 Gemini AI
 ```
+
+---
+
+# 🔥 Why NotebookAI?
+
+Traditional document viewers give you **information**.
+
+NotebookAI gives you **interaction with that information**.
+
+### Instead of asking:
+
+> "Where is this information in my 200-page PDF?"
+
+You can ask:
+
+> **"Explain the main argument in Chapter 3."**
+
+Or:
+
+> **"What are the key differences between these two concepts?"**
+
+Or:
+
+> **"Create flashcards from this document."**
+
+Or:
+
+> **"Generate a mind map of the major concepts."**
+
+The system retrieves the relevant information from your documents and uses it as context for the AI response.
+
+---
+
+# 🧠 Core AI Features
+
+## 💬 1. RAG-Powered Document Chat
+
+Ask questions directly against your uploaded documents.
+
+```text
+User Question
+      ↓
+Query Embedding
+      ↓
+Vector Similarity Search
+      ↓
+Top Relevant Chunks
+      ↓
+Context Construction
+      ↓
+Gemini
+      ↓
+Grounded Answer
+      +
+📌 Source Attribution
+```
+
+The system doesn't simply send the entire document to the LLM.
+
+Instead, it retrieves the **most relevant chunks** and provides those as context.
+
+This makes the response more focused and allows the application to associate answers with their source documents.
+
+---
+
+# 🔍 Retrieval-Augmented Generation
+
+The heart of NotebookAI is the **RAG pipeline**.
+
+### 📥 Step 1 — Upload
+
+Supported formats:
+
+```text
+📄 PDF
+📘 DOCX
+📝 TXT
+📑 Markdown
+```
+
+### 🔎 Step 2 — Parse
+
+The document parser extracts readable text.
+
+```text
+PDF / DOCX / TXT / MD
+          ↓
+     Text Extraction
+```
+
+### ✂️ Step 3 — Chunk
+
+Large documents are divided into smaller pieces using LangChain's:
+
+**RecursiveCharacterTextSplitter**
+
+Current configuration:
+
+```text
+Chunk Size  → 1000
+Overlap     → 200
+```
+
+The overlap helps preserve context between neighboring chunks.
+
+---
+
+### 🧠 Step 4 — Embeddings
+
+Each chunk is converted into a numerical vector representation using:
+
+**Google Generative AI Embeddings**
+
+```text
+Text
+ ↓
+Embedding Model
+ ↓
+Vector
+```
+
+The vector represents the semantic meaning of the text.
+
+---
+
+### 🗃️ Step 5 — Store
+
+Embeddings are stored in **ChromaDB**.
+
+```text
+Document
+   ↓
+Chunks
+   ↓
+Embeddings
+   ↓
+ChromaDB
+```
+
+Each workspace maintains its own vector collection.
+
+---
+
+### 🔎 Step 6 — Retrieve
+
+When the user asks a question:
+
+```text
+User Query
+    ↓
+Query Embedding
+    ↓
+Similarity Search
+    ↓
+Top 5 Relevant Chunks
+```
+
+Only the most relevant information is selected.
+
+---
+
+### 🤖 Step 7 — Generate
+
+The retrieved chunks are converted into a context string and provided to:
+
+**Google Gemini**
+
+```text
+Question
+   +
+Retrieved Context
+   ↓
+Gemini
+   ↓
+Grounded Answer
+   +
+Source Attribution
+```
+
+This is the core mechanism behind NotebookAI's document-aware intelligence.
+
+---
+
+# 🎯 AI Study Toolkit
+
+NotebookAI isn't limited to question answering.
+
+A document can become an entire **interactive study environment**.
+
+---
+
+## 📝 AI Summaries
+
+Generate:
+
+### ⚡ Short Summary
+
+A quick overview of the document.
+
+### 📖 Detailed Summary
+
+A deeper explanation of the material.
+
+### 💡 Key Insights
+
+Important concepts extracted from the document.
+
+---
+
+# 🧠 Mind Map Generator
+
+NotebookAI can transform document concepts into a hierarchical structure.
+
+```text
+                  📚 DOCUMENT
+                       │
+            ┌──────────┼──────────┐
+            ▼          ▼          ▼
+         Concept A  Concept B  Concept C
+            │          │
+        ┌───┴───┐      ├── Subtopic
+        ▼       ▼      └── Example
+     Topic 1  Topic 2
+```
+
+The generated structure is visualized using **React Flow**.
+
+Instead of reading concepts linearly, users can explore how they relate to one another.
+
+---
+
+# 🎴 AI Flashcards
+
+Turn documents into interactive revision material.
+
+```text
+              📄 DOCUMENT
+                   ↓
+                Gemini
+                   ↓
+           🎴 FLASHCARDS
+                   ↓
+       ┌────────────────────┐
+       │      QUESTION      │
+       │                    │
+       │   Flip to reveal   │
+       │      the answer    │
+       └────────────────────┘
+```
+
+Useful for:
+
+* Exam preparation
+* Technical learning
+* Interview preparation
+* Revision
+
+---
+
+# 🧪 AI Quiz Generator
+
+Generate multiple-choice quizzes directly from your documents.
+
+```text
+Document
+   ↓
+AI Question Generation
+   ↓
+MCQ Quiz
+   ↓
+User Answers
+   ↓
+Score
+   ↓
+📊 Performance
+```
+
+This converts passive reading into active learning.
+
+---
+
+# 🕸️ Knowledge Graph
+
+NotebookAI can extract entities and relationships from the document and represent them visually.
+
+```text
+              🧠 Knowledge Graph
+
+                    Concept
+                   /       \
+                  /         \
+             Entity A ─── Entity B
+                │             │
+                │             │
+             Related        Related
+                │             │
+                └──────┬──────┘
+                       ▼
+                    Entity C
+```
+
+The graph is rendered using **React Flow**, allowing users to visually explore relationships between concepts.
+
+---
+
+# 🏗️ System Architecture
+
+```text
+                         🌐 BROWSER
+                             │
+                             ▼
+                 ┌─────────────────────┐
+                 │    React + Vite     │
+                 │      Frontend       │
+                 └──────────┬──────────┘
+                            │
+                       REST API
+                            │
+                            ▼
+                 ┌─────────────────────┐
+                 │  Node.js + Express  │
+                 │       Backend       │
+                 └──────┬────────┬─────┘
+                        │        │
+             ┌──────────┘        └────────────┐
+             ▼                                ▼
+     ┌────────────────┐              ┌─────────────────┐
+     │ MongoDB Atlas  │              │    ChromaDB     │
+     │                │              │                 │
+     │ Users          │              │ Embeddings      │
+     │ Workspaces     │              │ Vector Search   │
+     │ Documents      │              │                 │
+     │ Chat History   │              └────────┬────────┘
+     └────────────────┘                       │
+                                             ▼
+                                  ┌────────────────────┐
+                                  │ Google Generative  │
+                                  │        AI          │
+                                  │                    │
+                                  │ Gemini + Embedding │
+                                  └────────────────────┘
+```
+
+---
+
+# 🔄 Complete RAG Architecture
+
+```text
+                         📄 DOCUMENT
+                              │
+                              ▼
+                    ┌──────────────────┐
+                    │ Document Parser  │
+                    └────────┬─────────┘
+                             │
+                             ▼
+                       Extract Text
+                             │
+                             ▼
+              ┌──────────────────────────┐
+              │ RecursiveCharacter       │
+              │ TextSplitter             │
+              │                          │
+              │ chunk = 1000             │
+              │ overlap = 200            │
+              └────────────┬─────────────┘
+                           │
+                           ▼
+                 🧠 Google Embeddings
+                           │
+                           ▼
+                    🗃️ ChromaDB
+                           │
+                     Store Vectors
+                           │
+                           │
+             ───────── USER QUERY ─────────
+                           │
+                           ▼
+                    Query Embedding
+                           │
+                           ▼
+                 🔎 Similarity Search
+                           │
+                           ▼
+                  Top 5 Relevant Chunks
+                           │
+                           ▼
+                  Build Context
+                           │
+                           ▼
+                    🤖 Gemini
+                           │
+                           ▼
+               Grounded AI Response
+                           │
+                           ▼
+                 📌 Source Attribution
+```
+
+---
+
+# 🔐 Authentication
+
+NotebookAI implements protected user access using:
+
+* 🔑 JWT authentication
+* 🔒 Protected routes
+* 👤 User-specific workspaces
+* 🍪 Authenticated API requests
+* 🛡️ Middleware-based token verification
+
+Authentication flow:
+
+```text
+Register / Login
+       ↓
+   Credentials
+       ↓
+   JWT Token
+       ↓
+Authentication Middleware
+       ↓
+ Protected Resources
+```
+
+---
+
+# 🗂️ Workspace Architecture
+
+Each user can create dedicated workspaces for different knowledge domains.
+
+Example:
+
+```text
+👤 User
+│
+├── 🧠 DSA Preparation
+│   ├── Arrays.pdf
+│   ├── Graphs.pdf
+│   └── Algorithms.pdf
+│
+├── 📚 Machine Learning
+│   ├── ML Notes.pdf
+│   └── Deep Learning.pdf
+│
+└── 💼 Interview Preparation
+    ├── Resume.pdf
+    ├── Projects.pdf
+    └── System Design.pdf
+```
+
+Each workspace maintains its own:
+
+* 📄 Documents
+* 🧠 Vector collection
+* 💬 Chat history
+* 📊 Activity information
+
+---
+
+# 🗄️ Database Design
+
+### 👤 User
+
+```text
+name
+email
+password
+workspacesCount
+lastActive
+```
+
+### 🧠 Workspace
+
+```text
+name
+description
+owner
+documents
+color
+icon
+chromaCollectionId
+totalDocuments
+lastActivity
+```
+
+### 📄 Document
+
+```text
+name
+originalName
+type
+size
+filePath
+workspace
+owner
+content
+chunksCount
+isIndexed
+indexingStatus
+metadata
+summary
+```
+
+### 💬 ChatHistory
+
+```text
+workspace
+user
+title
+messages
+   ├── role
+   ├── content
+   ├── sources
+   └── timestamp
+```
+
+---
+
+# 🎨 Frontend Experience
+
+NotebookAI uses a **three-panel workspace interface**:
+
+```text
+┌────────────┬─────────────────────────┬──────────────────┐
+│            │                         │                  │
+│  📁 Source │       💬 AI Chat        │   🧠 AI Tools    │
+│   Panel    │                         │                  │
+│            │                         │   📝 Summary     │
+│ Documents  │    Ask anything about   │   🧠 Mind Map    │
+│            │    your documents       │   🎴 Flashcards  │
+│ Upload     │                         │   🧪 Quiz        │
+│            │                         │   🕸️ Graph       │
+│            │                         │                  │
+└────────────┴─────────────────────────┴──────────────────┘
+```
+
+The right-side AI panel provides access to the different knowledge-generation tools without leaving the workspace.
+
+---
+
+# ⚡ Frontend State Management
+
+The application uses **Zustand** for lightweight state management.
+
+Separate stores handle:
+
+```text
+🔐 Authentication
+🧠 Workspace
+📄 Documents
+💬 Chat
+🎨 UI State
+```
+
+API communication is centralized through an Axios-based service layer.
+
+---
+
+# 🧩 Tech Stack
+
+## 🎨 Frontend
+
+| Technology      | Role                |
+| --------------- | ------------------- |
+| ⚛️ React        | UI                  |
+| ⚡ Vite          | Development / Build |
+| 🎨 Tailwind CSS | Styling             |
+| 🧭 React Router | Routing             |
+| 🐻 Zustand      | State Management    |
+| 🔗 Axios        | API Communication   |
+| 🕸️ React Flow  | Mind Maps / Graphs  |
+
+---
+
+## ⚙️ Backend
+
+| Technology    | Role           |
+| ------------- | -------------- |
+| 🟢 Node.js    | Runtime        |
+| 🚂 Express.js | REST API       |
+| 🍃 Mongoose   | MongoDB ODM    |
+| 🔐 JWT        | Authentication |
+| 📤 Multer     | File Uploads   |
+
+---
+
+## 🤖 AI Stack
+
+| Technology           | Role                    |
+| -------------------- | ----------------------- |
+| 🦜 LangChain         | RAG orchestration       |
+| 💎 Gemini            | LLM generation          |
+| 🧠 Google Embeddings | Semantic representation |
+| 🗃️ ChromaDB         | Vector storage          |
+| 📄 pdf-parse         | PDF processing          |
+| 📘 mammoth           | DOCX processing         |
+
+---
+
+# 📁 Project Structure
+
+```text
 notebookai/
-├── docker-compose.yml          # ChromaDB local dev
-├── package.json                # Root monorepo scripts
+│
+├── 🐳 docker-compose.yml
+├── 📦 package.json
 │
 ├── backend/
-│   ├── .env.example
-│   ├── package.json
-│   ├── render.yaml             # Render deployment config
-│   └── src/
-│       ├── server.js           # Express app entry point
-│       ├── config/
-│       │   └── database.js     # MongoDB connection
-│       ├── controllers/
-│       │   ├── auth.controller.js
-│       │   ├── workspace.controller.js
-│       │   ├── document.controller.js
-│       │   ├── chat.controller.js
-│       │   └── ai.controller.js
-│       ├── middleware/
-│       │   ├── auth.middleware.js    # JWT verify
-│       │   └── error.middleware.js  # Global error handler
-│       ├── models/
-│       │   ├── user.model.js
-│       │   ├── workspace.model.js
-│       │   ├── document.model.js
-│       │   └── chatHistory.model.js
-│       ├── routes/
-│       │   ├── auth.routes.js
-│       │   ├── workspace.routes.js
-│       │   ├── document.routes.js
-│       │   ├── chat.routes.js
-│       │   └── ai.routes.js
-│       └── services/
-│           ├── gemini.service.js       # All Gemini AI calls
-│           ├── vectorStore.service.js  # ChromaDB + embeddings
-│           └── parser.service.js       # PDF/DOCX/TXT/MD parsing
+│   ├── ⚙️ config/
+│   ├── 🎮 controllers/
+│   ├── 🛡️ middleware/
+│   ├── 🗄️ models/
+│   ├── 🛣️ routes/
+│   ├── 🔧 services/
+│   │   ├── gemini.service.js
+│   │   ├── vectorStore.service.js
+│   │   └── parser.service.js
+│   └── server.js
 │
 └── frontend/
-    ├── .env.example
-    ├── index.html
-    ├── package.json
-    ├── vite.config.js
-    ├── tailwind.config.js
-    ├── postcss.config.js
-    ├── vercel.json             # Vercel deployment config
-    └── src/
-        ├── main.jsx
-        ├── App.jsx
-        ├── index.css
-        ├── store/
-        │   └── index.js        # Zustand stores (auth, workspace, docs, chat, ui)
-        ├── services/
-        │   └── api.js          # Axios instance + all API calls
-        └── components/
-            ├── auth/
-            │   ├── LoginPage.jsx
-            │   └── RegisterPage.jsx
-            ├── layout/
-            │   ├── DashboardLayout.jsx
-            │   ├── Sidebar.jsx
-            │   └── LandingPage.jsx
-            ├── workspace/
-            │   ├── WorkspacePage.jsx      # 3-panel layout
-            │   ├── WorkspaceHeader.jsx
-            │   ├── RightPanel.jsx         # Tab controller
-            │   ├── CreateWorkspaceModal.jsx
-            │   ├── SourcesPanel.jsx       # File upload + document list
-            │   └── SummaryPanel.jsx       # AI summaries
-            ├── chat/
-            │   └── ChatInterface.jsx      # RAG chat with sources
-            ├── mindmap/
-            │   └── MindMapPanel.jsx       # React Flow mind map
-            ├── flashcard/
-            │   └── FlashcardPanel.jsx     # Interactive flashcard study
-            ├── quiz/
-            │   └── QuizPanel.jsx          # Multiple-choice quiz
-            ├── knowledge-graph/
-            │   └── KnowledgeGraphPanel.jsx # Entity relationship graph
-            └── ui/
-                └── Logo.jsx
+    ├── src/
+    │   ├── store/
+    │   ├── services/
+    │   └── components/
+    │       ├── auth/
+    │       ├── layout/
+    │       ├── workspace/
+    │       ├── chat/
+    │       ├── mindmap/
+    │       ├── flashcard/
+    │       ├── quiz/
+    │       └── knowledge-graph/
+    │
+    └── package.json
+```
+
+## The actual repository separates the backend into controllers, middleware, models, routes, and services, while the frontend is organized around workspace, chat, mind-map, flashcard, quiz, and knowledge-graph components.
+
+# 🚀 Getting Started
+
+## Prerequisites
+
+```text
+Node.js 18+
+Docker
+MongoDB Atlas
+Google AI Studio API Key
 ```
 
 ---
 
-## 🗃️ Database Schema
+## 1️⃣ Clone
 
-### User
-```js
-{ name, email, password (bcrypt), workspacesCount, lastActive }
-```
-
-### Workspace
-```js
-{ name, description, owner (ref User), documents [ref Document],
-  color, icon, chromaCollectionId, totalDocuments, lastActivity }
-```
-
-### Document
-```js
-{ name, originalName, type (pdf|docx|txt|md), size, filePath,
-  workspace, owner, content, chunksCount, isIndexed,
-  indexingStatus (pending|processing|completed|failed), indexingError,
-  metadata { pageCount, wordCount, author },
-  summary { short, detailed, keyInsights, generatedAt } }
-```
-
-### ChatHistory
-```js
-{ workspace, user, title,
-  messages [{ role (user|assistant), content, sources [{
-    documentId, documentName, excerpt, relevanceScore
-  }], timestamp }] }
-```
-
----
-
-## 🔌 API Routes
-
-### Auth `/api/auth`
-| Method | Path | Auth | Description |
-|--------|------|------|-------------|
-| POST | `/register` | ❌ | Create account |
-| POST | `/login` | ❌ | Login + get JWT |
-| GET | `/me` | ✅ | Get current user |
-| PATCH | `/profile` | ✅ | Update profile |
-
-### Workspaces `/api/workspaces`
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/` | List all workspaces |
-| POST | `/` | Create workspace |
-| GET | `/:id` | Get workspace + docs |
-| PUT | `/:id` | Update workspace |
-| DELETE | `/:id` | Delete + cleanup |
-| GET | `/:id/stats` | Workspace stats |
-
-### Documents `/api/documents`
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/workspace/:id/upload` | Upload + parse + index |
-| GET | `/workspace/:id` | List documents |
-| GET | `/:docId` | Get single document |
-| DELETE | `/:docId` | Delete + remove from ChromaDB |
-| POST | `/:docId/reindex` | Re-trigger indexing |
-
-### Chat `/api/chat`
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/workspace/:id` | Send message (RAG) |
-| GET | `/workspace/:id/history` | Get all chat sessions |
-| GET | `/session/:chatId` | Get single session |
-| DELETE | `/session/:chatId` | Delete session |
-| DELETE | `/workspace/:id/clear` | Clear all history |
-
-### AI `/api/ai`
-| Method | Path | Params | Description |
-|--------|------|--------|-------------|
-| GET | `/workspace/:id/summary` | `?type=short\|detailed\|insights` | Generate summary |
-| GET | `/workspace/:id/mindmap` | `?documentId=` | Generate mind map JSON |
-| GET | `/workspace/:id/flashcards` | `?documentId=` | Generate flashcards |
-| GET | `/workspace/:id/quiz` | `?documentId=` | Generate quiz |
-| GET | `/workspace/:id/knowledge-graph` | `?documentId=` | Generate entity graph |
-
----
-
-## 🤖 LangChain / RAG Pipeline
-
-```
-Upload → Parse (pdf-parse / mammoth / fs) → Extract Text
-                                                    ↓
-                              RecursiveCharacterTextSplitter
-                              (chunkSize: 1000, overlap: 200)
-                                                    ↓
-                          GoogleGenerativeAIEmbeddings (embedding-001)
-                                                    ↓
-                               ChromaDB VectorStore (persist per workspace)
-                                                    ↓
-         User Query → Embed Query → Similarity Search (top 5 chunks)
-                                                    ↓
-                         Build Context String from Retrieved Chunks
-                                                    ↓
-                      Gemini 1.5 Flash → Grounded Answer + Source Attribution
-```
-
----
-
-## 🚀 Local Development Setup
-
-### Prerequisites
-- Node.js 18+
-- Docker (for ChromaDB)
-- MongoDB Atlas account (free tier works)
-- Google AI Studio API key (free tier works)
-
-### Step 1 — Clone & Install
 ```bash
 git clone https://github.com/yourname/notebookai.git
 cd notebookai
+```
+
+## 2️⃣ Install
+
+```bash
 npm run install:all
 ```
 
-### Step 2 — Start ChromaDB
+## 3️⃣ Start ChromaDB
+
 ```bash
 docker-compose up -d
-# ChromaDB runs at http://localhost:8000
 ```
 
-### Step 3 — Configure Backend
+ChromaDB runs locally on:
+
+```text
+http://localhost:8000
+```
+
+## 4️⃣ Configure Backend
+
 ```bash
 cd backend
 cp .env.example .env
-# Edit .env with your values:
-#   MONGODB_URI=<your Atlas connection string>
-#   JWT_SECRET=<any long random string>
-#   GOOGLE_API_KEY=<from https://aistudio.google.com/app/apikey>
-#   CHROMA_URL=http://localhost:8000
-#   FRONTEND_URL=http://localhost:5173
 ```
 
-### Step 4 — Configure Frontend
+Configure:
+
+```text
+MONGODB_URI
+JWT_SECRET
+GOOGLE_API_KEY
+CHROMA_URL
+FRONTEND_URL
+```
+
+## 5️⃣ Configure Frontend
+
 ```bash
 cd frontend
 cp .env.example .env
-# VITE_API_URL=http://localhost:5000/api
 ```
 
-### Step 5 — Run Everything
+Set:
+
+```text
+VITE_API_URL=http://localhost:5000/api
+```
+
+## 6️⃣ Run
+
 ```bash
-# From root:
-npm run dev:backend   # Terminal 1 → port 5000
-npm run dev:frontend  # Terminal 2 → port 5173
-# ChromaDB already running on 8000
+npm run dev:backend
 ```
 
-Open `http://localhost:5173`
+```bash
+npm run dev:frontend
+```
 
----
+Open:
 
-## ☁️ Production Deployment
-
-### Backend → Render
-
-1. Push `backend/` to a GitHub repo
-2. Go to [render.com](https://render.com) → New Web Service
-3. Connect GitHub repo, set **Root Directory** to `backend`
-4. Build command: `npm install`
-5. Start command: `node src/server.js`
-6. Add environment variables from `.env.example`
-7. Add a **ChromaDB** service or use [Chroma Cloud](https://trychroma.com)
-
-### Frontend → Vercel
-
-1. Push `frontend/` to a GitHub repo
-2. Go to [vercel.com](https://vercel.com) → New Project
-3. Import repo, framework preset: **Vite**
-4. Add env variable:
-   - `VITE_API_URL` = your Render backend URL + `/api`
-5. Deploy
-
-### ChromaDB on Render (Free Tier)
-```yaml
-# Add to render.yaml or create a separate Render service:
-# Docker image: chromadb/chroma:latest
-# Port: 8000
-# Env: IS_PERSISTENT=TRUE
+```text
+http://localhost:5173
 ```
 
 ---
 
-## 🔑 Getting API Keys
+# 📊 API Architecture
 
-### Google Gemini (Free)
-1. Go to https://aistudio.google.com/app/apikey
-2. Click **Create API Key**
-3. Copy and paste into `GOOGLE_API_KEY`
-4. Free tier: 15 RPM, 1M tokens/day — plenty for development
+NotebookAI exposes REST APIs organized around five major domains:
 
-### MongoDB Atlas (Free)
-1. Go to https://cloud.mongodb.com
-2. Create a free M0 cluster
-3. Create a database user
-4. Whitelist `0.0.0.0/0` for IP access
-5. Get connection string from **Connect > Drivers**
+```text
+/api/auth
+     │
+     ├── Register
+     ├── Login
+     ├── Current User
+     └── Profile
 
----
+/api/workspaces
+     │
+     ├── Create
+     ├── Read
+     ├── Update
+     ├── Delete
+     └── Statistics
 
-## 🛠️ Development Roadmap
+/api/documents
+     │
+     ├── Upload
+     ├── Parse
+     ├── Index
+     ├── Delete
+     └── Re-index
 
-### Phase 1 — Foundation ✅
-- [x] Project structure and boilerplate
-- [x] MongoDB schemas (User, Workspace, Document, ChatHistory)
-- [x] JWT auth (register, login, protected routes)
-- [x] Workspace CRUD
-- [x] File upload with Multer (PDF, DOCX, TXT, MD)
+/api/chat
+     │
+     ├── RAG Question
+     ├── History
+     └── Sessions
 
-### Phase 2 — RAG Pipeline ✅
-- [x] Document parsing service (pdf-parse, mammoth)
-- [x] LangChain RecursiveCharacterTextSplitter
-- [x] Google Generative AI Embeddings (embedding-001)
-- [x] ChromaDB vector store integration
-- [x] Similarity search with metadata
-- [x] Async background indexing with status tracking
-
-### Phase 3 — AI Features ✅
-- [x] RAG chat with source attribution
-- [x] AI summaries (short, detailed, insights)
-- [x] Mind map generation (hierarchical JSON → React Flow)
-- [x] Flashcard generator with flip animation
-- [x] Multiple-choice quiz with scoring
-- [x] Knowledge graph (entity extraction → React Flow)
-
-### Phase 4 — Frontend ✅
-- [x] Landing page
-- [x] Auth pages (login, register)
-- [x] 3-panel layout (sidebar / chat / right panel)
-- [x] Collapsible sidebar with workspace management
-- [x] Drag-and-drop file upload with progress
-- [x] Document indexing status polling
-- [x] Conversational chat UI with markdown rendering
-- [x] Source attribution in chat messages
-- [x] Interactive React Flow diagrams (mind map + knowledge graph)
-- [x] Flashcard study mode with flip animation
-- [x] Quiz mode with result scoring
-- [x] Zustand state management
-- [x] Toast notifications
-
-### Phase 5 — Production
-- [ ] Add WebSocket for real-time indexing updates
-- [ ] Add collaborative workspace sharing
-- [ ] Export mind maps / graphs as PNG
-- [ ] Add document search with highlighting
-- [ ] Add citation mode (inline source links)
-- [ ] Add voice input via Web Speech API
-- [ ] Add PDF viewer panel
-- [ ] Rate limiting per user (not just per IP)
-- [ ] Add refresh token rotation
-- [ ] Add email verification
-
----
-
-## 🏗️ Architecture Overview
-
-```
-Browser (React + Vite)
-        │
-        │  HTTPS / REST API
-        ▼
-Express.js API (Node.js)
-        │
-   ┌────┴─────────────────────────────────┐
-   │                                       │
-MongoDB Atlas                         ChromaDB
-(Users, Workspaces,              (Document Embeddings,
- Documents, ChatHistory)          Vector Search)
-                                          │
-                              Google Generative AI
-                              (Gemini 1.5 Flash + embedding-001)
+/api/ai
+     │
+     ├── Summary
+     ├── Mind Map
+     ├── Flashcards
+     ├── Quiz
+     └── Knowledge Graph
 ```
 
+The implemented API structure includes dedicated routes for authentication, workspaces, documents, chat, and AI functionality.
+
 ---
 
-## 📄 License
+# ☁️ Deployment
 
-MIT — built for educational purposes. Use freely.
+### Backend
+
+Designed for deployment on:
+
+**Render**
+
+### Frontend
+
+Designed for deployment on:
+
+**Vercel**
+
+### Vector Database
+
+Can run using:
+
+**ChromaDB**
+
+either locally through Docker or through a hosted Chroma deployment.
+
+---
+
+# 🗺️ Development Roadmap
+
+### ✅ Foundation
+
+* [x] Project architecture
+* [x] MongoDB schemas
+* [x] JWT authentication
+* [x] Workspace CRUD
+* [x] File uploads
+* [x] PDF / DOCX / TXT / MD parsing
+
+### ✅ RAG Engine
+
+* [x] Text chunking
+* [x] Google embeddings
+* [x] ChromaDB integration
+* [x] Similarity search
+* [x] Source metadata
+* [x] Background indexing
+
+### ✅ AI Layer
+
+* [x] RAG chat
+* [x] Source attribution
+* [x] AI summaries
+* [x] Mind maps
+* [x] Flashcards
+* [x] Quizzes
+* [x] Knowledge graphs
+
+### ✅ Frontend
+
+* [x] Landing page
+* [x] Authentication
+* [x] Workspace UI
+* [x] Three-panel layout
+* [x] Drag-and-drop upload
+* [x] Indexing status
+* [x] Markdown chat
+* [x] Interactive graphs
+* [x] Flashcard mode
+* [x] Quiz mode
+* [x] Zustand state management
+
+The uploaded project documentation marks these foundation, RAG, AI, and frontend phases as completed.
+
+---
+
+# 🔮 What's Next?
+
+The next evolution of NotebookAI focuses on making the workspace more collaborative and production-ready.
+
+### 🚧 Planned
+
+* [ ] 🔄 Real-time indexing updates
+* [ ] 👥 Collaborative workspaces
+* [ ] 🖼️ Export mind maps / graphs
+* [ ] 🔍 Document search + highlighting
+* [ ] 📌 Inline citation mode
+* [ ] 🎙️ Voice input
+* [ ] 📖 Integrated PDF viewer
+* [ ] 🚦 User-level rate limiting
+* [ ] 🔄 Refresh-token rotation
+* [ ] ✉️ Email verification
+
+---
+
+# 💡 Engineering Highlights
+
+NotebookAI is more than a CRUD application with an LLM API.
+
+The project demonstrates:
+
+```text
+                 🧠 NotebookAI
+                      │
+       ┌──────────────┼──────────────┐
+       ▼              ▼              ▼
+   📄 Documents    🤖 AI/RAG      🎨 Frontend
+       │              │              │
+       ▼              ▼              ▼
+   Parsing         Embeddings      React
+       │           ChromaDB        Zustand
+       │           LangChain       React Flow
+       ▼              │              │
+   Chunking          ▼              ▼
+                  Gemini         Interactive UI
+       │              │
+       └──────────────┼──────────────┘
+                      ▼
+              🚀 Full-Stack AI
+                 Workspace
+```
+
+### The most important engineering concepts demonstrated:
+
+* 🧠 **Retrieval-Augmented Generation**
+* 🔎 **Semantic Vector Search**
+* 🗃️ **Vector Database Architecture**
+* 🔗 **LangChain Pipelines**
+* 🤖 **LLM Integration**
+* 📄 **Document Processing**
+* 🔐 **JWT Authentication**
+* 🏗️ **REST API Architecture**
+* 🗄️ **MongoDB Data Modeling**
+* 🕸️ **Knowledge Graph Visualization**
+* 🧠 **AI-powered Learning Tools**
+* ⚡ **Full-stack application architecture**
+
+---
+
+# 🎯 The Core Idea
+
+NotebookAI isn't trying to replace your documents.
+
+It makes them **interactive**.
+
+```text
+          📄 STATIC DOCUMENT
+                  │
+                  ▼
+             🧠 NOTEBOOKAI
+                  │
+       ┌──────────┼──────────┐
+       ▼          ▼          ▼
+     ASK        LEARN      EXPLORE
+       │          │          │
+       ▼          ▼          ▼
+     💬 RAG     🎴 Cards    🕸️ Graph
+     📝 Summary 🧪 Quiz     🧠 Mind Map
+                  │
+                  ▼
+              UNDERSTAND
+```
+
+> ### **Upload knowledge. Ask questions. Discover connections. Learn faster. 🚀**
+
+---
+
+<div align="center">
+
+# ⭐ NotebookAI
+
+### **From documents to knowledge.**
+
+Built with ❤️ using
+
+**React • Node.js • MongoDB • LangChain • Gemini • ChromaDB**
+
+<br/>
+
+**🧠 RAG • 🔎 Vector Search • 🤖 LLMs • 🕸️ Knowledge Graphs**
+
+<br/>
+
+⭐ **If this project helped you, consider starring the repository!**
+
+</div>
